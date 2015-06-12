@@ -13,16 +13,17 @@ session = GoogleDrive.login_with_oauth(access_token)
 #
 
 def searchAndDeleteCR2(target, pathArray)
-  puts "Target: #{pathArray.join('/')}(Count #{target.contents.count})"
-  target.contents.each do |item|
+  counts = 0
+  target.contents do |item|
+    counts += 1
     if item.class == GoogleDrive::Collection
       searchAndDeleteCR2(item, [pathArray, item.title]) 
     elsif /cr2$/i === item.title
       puts "Delete: " + [pathArray, item.title].join('/')
       item.delete true
     end
-    
   end
+  puts "Target: #{pathArray.join('/')} (Count #{counts})"
 end
 
 
